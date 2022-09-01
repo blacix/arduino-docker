@@ -36,7 +36,9 @@ WORKDIR /workdir/arduino
 RUN \
     arduino-cli core update-index && \
     arduino-cli core install SparkFun:apollo3 && \
-    arduino-cli lib install ArduinoBLE@1.2.0
+    arduino-cli lib install ArduinoBLE@1.3.1
 
+# apply patch
+COPY ArduinoBLE-1.3.1-patch/ATT.cpp /root/Arduino/libraries/ArduinoBLE/src/utility/ATT.cpp
 
 WORKDIR /workdir/project
