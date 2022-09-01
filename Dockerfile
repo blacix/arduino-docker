@@ -18,15 +18,16 @@ RUN mkdir /workdir/project && \
 
 
 # install arduino and arduino-cli
+ENV PATH="/workdir/arduino/bin:${PATH}"
 WORKDIR /workdir/arduino
 RUN wget --no-check-certificate -q https://downloads.arduino.cc/${ARDUINO_VERSION}-linux64.tar.xz && \
-	tar -xvf ${ARDUINO_VERSION}-linux64.tar.xz && \
+	tar -xvf ${ARDUINO_VERSION}-linux64.tar.xz && rm -f ${ARDUINO_VERSION}-linux64.tar.xz && \
     cd ${ARDUINO_VERSION} && \
     ./install.sh && \
     cd .. && \
     curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh && \
-    /workdir/arduino/bin/arduino-cli core update-index
+    arduino-cli core update-index
 
-ENV PATH="/workdir/arduino/bin:${PATH}"
+
 
 WORKDIR /workdir/project
