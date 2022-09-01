@@ -12,7 +12,7 @@ cd <arduino project dir>
 
 docker run --rm -v ${PWD}:/workdir/project arduino /bin/bash -c '\
 	cd /workdir/project && \
-	arduino-cli compile -b -e SparkFun:apollo3:sfe_artemis_module project.ino'
+	arduino-cli compile -e -b SparkFun:apollo3:sfe_artemis_module project.ino'
 
 ```
 
