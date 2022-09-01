@@ -25,9 +25,18 @@ RUN wget --no-check-certificate -q https://downloads.arduino.cc/${ARDUINO_VERSIO
     cd ${ARDUINO_VERSION} && \
     ./install.sh && \
     cd .. && \
-    curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh && \
-    arduino-cli core update-index
+    curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
 
+
+
+WORKDIR /root/.arduino15
+COPY arduino-cli.yaml ./
+
+WORKDIR /workdir/arduino
+RUN \
+    arduino-cli core update-index && \
+    arduino-cli core install SparkFun:apollo3 && \
+    arduino-cli lib install ArduinoBLE@1.2.0
 
 
 WORKDIR /workdir/project
