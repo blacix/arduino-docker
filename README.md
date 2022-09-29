@@ -21,10 +21,3 @@ docker run --rm -v ${PWD}:/workdir/project arduino /bin/bash -c '\
 	cd /workdir/project && \
 	arduino-cli compile -e -b SparkFun:apollo3:sfe_artemis_atp project.ino'
 ```
-
-# start as daemon / detached
-```
-docker run -d arduino bash
-docker ps
-docker exec -it <container id> bash
-```
