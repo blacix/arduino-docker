@@ -38,7 +38,9 @@ RUN \
     arduino-cli core install SparkFun:apollo3 && \
     arduino-cli lib install ArduinoBLE@1.3.1
 
-# apply patch
-COPY ArduinoBLE-1.3.1-patch/ATT.cpp /root/Arduino/libraries/ArduinoBLE/src/utility/ATT.cpp
+# apply patches
+COPY ArduinoBLE-1.3.1-patch/src/utility/ATT.cpp /root/Arduino/libraries/ArduinoBLE/src/utility/ATT.cpp
+COPY ArduinoBLE-1.3.1-patch/src/BLEDevice.cpp /root/Arduino/libraries/ArduinoBLE/src/BLEDevice.cpp
+COPY ArduinoBLE-1.3.1-patch/src/BLEDevice.h /root/Arduino/libraries/ArduinoBLE/src/BLEDevice.h
 
 WORKDIR /workdir/project
