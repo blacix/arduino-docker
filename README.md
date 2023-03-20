@@ -10,14 +10,14 @@ https://github.com/arduino-libraries/ArduinoBLE/issues/175
 ## build docker image
 ```
 cd <arduino-docker repo dir>
-docker build -t arduino .
+docker build --build-arg USER_ID=$(id -u <username>) --build-arg GROUP_ID=$(id -g <username>) -t arduino .
 ```
 
 ## build your project
 ```
 cd <arduino project dir>
 
-docker run --rm -v ${PWD}:/workdir/project arduino /bin/bash -c '\
+docker run -u $(id -u <username>):$(id -g <username>) --rm -v ${PWD}:/workdir/project arduino /bin/bash -c '\
 	cd /workdir/project && \
 	arduino-cli compile -e -b SparkFun:apollo3:sfe_artemis_atp project.ino'
 ```
