@@ -7,8 +7,7 @@ ENV ARDUINO_VERSION="arduino-1.8.13"
 
 # System dependencies
 ARG arch=amd64
-RUN mkdir /workdir/project && \
-	apt update -y && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
+RUN apt update -y && apt upgrade -y && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
         wget \
         curl \
         xz-utils \
@@ -19,6 +18,21 @@ RUN mkdir /workdir/project && \
 
 # install arduino and arduino-cli
 ENV PATH="/workdir/arduino/bin:${PATH}"
+
+# Create a new user with the desired UID and GID
+ARG USER_NAME=jenkins
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+RUN groupadd -g ${GROUP_ID} ${USER_NAME} && \
+    useradd -u ${USER_ID} -g ${GROUP_ID} -ms /bin/bash ${USER_NAME}
+
+# install Arduino with this user
+USER ${USER_NAME}:${USER_NAME}
+
+# create folder for Arduino library installation target - see arduino-cli.yaml
+RUN mkdir /home/${USER_NAME}/Arduino
+
+# download and install Arduino
 WORKDIR /workdir/arduino
 RUN wget --no-check-certificate -q https://downloads.arduino.cc/${ARDUINO_VERSION}-linux64.tar.xz && \
 	tar -xvf ${ARDUINO_VERSION}-linux64.tar.xz && rm -f ${ARDUINO_VERSION}-linux64.tar.xz && \
@@ -28,8 +42,7 @@ RUN wget --no-check-certificate -q https://downloads.arduino.cc/${ARDUINO_VERSIO
     curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
 
 
-
-WORKDIR /root/.arduino15
+WORKDIR /home/${USER_NAME}/.arduino15
 COPY arduino-cli.yaml ./
 
 WORKDIR /workdir/arduino
@@ -39,8 +52,8 @@ RUN \
     arduino-cli lib install ArduinoBLE@1.3.1
 
 # apply patches
-COPY ArduinoBLE-1.3.1-patch/src/utility/ATT.cpp /root/Arduino/libraries/ArduinoBLE/src/utility/ATT.cpp
-COPY ArduinoBLE-1.3.1-patch/src/BLEDevice.cpp /root/Arduino/libraries/ArduinoBLE/src/BLEDevice.cpp
-COPY ArduinoBLE-1.3.1-patch/src/BLEDevice.h /root/Arduino/libraries/ArduinoBLE/src/BLEDevice.h
+COPY ArduinoBLE-1.3.1-patch/src/utility/ATT.cpp /home/${USER_NAME}/Arduino/libraries/ArduinoBLE/src/utility/ATT.cpp
+COPY ArduinoBLE-1.3.1-patch/src/BLEDevice.cpp /home/${USER_NAME}/Arduino/libraries/ArduinoBLE/src/BLEDevice.cpp
+COPY ArduinoBLE-1.3.1-patch/src/BLEDevice.h /home/${USER_NAME}/Arduino/libraries/ArduinoBLE/src/BLEDevice.h
 
 WORKDIR /workdir/project

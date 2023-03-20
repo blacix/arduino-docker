@@ -9,9 +9,9 @@ board_manager:
 daemon:
   port: "50051"
 directories:
-  data: /root/.arduino15
-  downloads: /root/.arduino15/staging
-  user: /root/Arduino
+  data: /home/jenkins/.arduino15
+  downloads: /home/jenkins/.arduino15/staging
+  user: /home/jenkins/Arduino
 library:
   enable_unsafe_install: false
 logging:
